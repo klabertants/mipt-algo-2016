@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel} 
+\usepackage{cmap} 
+\usepackage{soulutf8}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+
+\begin{document}
+\subparagraph{\textit{ Задача ''Алгоритм Петерсона [peterson]'', Ткаченко Дмитрий, команда PQ.}}
+
+\subparagraph{Решение:} Приведем фрагмент кода и последовательность выполнения инструкций на процессоре, доказывающую, что при замене мест операций в doorway-секции, алгоритм Петерсона перестает гарантировать принцип взаимного исключения:
+\newline
+void lock(int t) \{
+\newline
+//1	victim.store(t);
+\newline
+//2 want[t].store(true);
+\newline
+	while (want[1-t].load() && victim.load() == t) \{
+	\newline
+		//wait
+		\newline
+	\}
+	\newline
+\} 
+\newline 
+Здесь комментарии 1 и 2 будут означать выполнение данной строчки кода. Инструкцию процессора зададим видом n-k, где n - номер потока, который будет выполнять команду k (это 1, 2 и w - попытка захода в wait-секцию, то есть проверка условий цикла while).
+
+Приведем же наконец порядок выполнения инструкций на процесосре:
+\newline
+\subparagraph{1)} 0 - 1 (want[0] == false, want[1] == false, victim == 0)
+\subparagraph{2)} 1 - 1 (want[0] == false, want[1] == false, victim == 1)
+\subparagraph{3)} 1 - 2 (want[0] == false, want[1] == true, victim == 1)
+\subparagraph{4)} 1 - w (want[0] == false, want[1] == true, victim == 1). Попытка захода в wait-секцию, условия цикла while не выполнены (want[0] = false) и поток 1 заходит в критическую секцию.
+\subparagraph{5)} 0 - 2 (want[0] == true, want[1] == true, victim == 1)
+\subparagraph{6)} 0 - w (want[0] == true, want[1] == true, victim == 1).
+Попытка захода в wait-секцию, условия цикла while не выполнены (victim == 1) и поток 0 заходит в критическую секцию.
+\newline
+\newline
+\subparagrapg{\textbf{Принцип взаимного исключения нарушен.}}
+\subparagraph{Ответ:} Нет, не будет.
+
+\end{document}
+
