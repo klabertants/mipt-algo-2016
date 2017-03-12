@@ -1,0 +1,15 @@
+\documentclass{article}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel} 
+\usepackage{cmap} 
+\usepackage{soulutf8}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+
+\begin{document}
+\subparagraph{\textit{ Задача "Блокирующий флаг", Ткаченко Дмитрий, группа 595.}}
+
+\paragraph{Решение:} Предположим, что какой-то поток выполнял метод $wait()$ нашего класса, зашел внутрь цикла $while(!ready\_.load())$, но не выполнил тело цикла. В этот момент другой поток начал выполнять метод $set()$, отправил $ready\_cond\_.notify\_all()$, но тот поток, что не успел сделать $ready\_cond\_.wait(lock)$ не получит уведомление, а значит, работа уже не корректна! 
+
+\end{document}
+
